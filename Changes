@@ -1,8 +1,15 @@
 Revision history for Perl extension Business::Maxmind::CreditCardFraudDetection
-1.50 Februar 19th 2009
+1.51 Sep 3th 2009
+        - Fix uri_encoding for wide characters ( Michael Schout )
+        - Ignore, when create cache file fail ( Boris Zentner )
+	- Removed location verification example and class
+
+1.50 February 19th 2009
 	- minfraud3 is really the default server if useDNS => 0 is used ( Boris Zentner )
-1.49 Februar 19th 2009
+
+1.49 February 19th 2009
 	- add minfraud3.maxmind.com as primary server ( Boris Zentner )
+
 1.48 October 3th 2008
 	- add new optional fields user_agent and accept_language to Business::MaxMind::CreditCardFraudDetection ( Boris Zentner )
 

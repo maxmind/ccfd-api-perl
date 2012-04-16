@@ -1,14 +1,13 @@
 Changes
 COPYING
 example.pl
-example_locv.pl
 example_telv.pl
 lib/Business/MaxMind/CreditCardFraudDetection.pm
 lib/Business/MaxMind/HTTPBase.pm
-lib/Business/MaxMind/LocationVerification.pm
 lib/Business/MaxMind/TelephoneVerification.pm
 Makefile.PL
 MANIFEST
 README
 t/1.t
+t/utf8.t
 META.yml                                 Module meta-data (added by MakeMaker)

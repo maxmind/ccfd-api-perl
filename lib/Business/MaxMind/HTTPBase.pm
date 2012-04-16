@@ -1,6 +1,8 @@
 package Business::MaxMind::HTTPBase;
 
-use 5.005;
+use 5.006; # we use the utf8 pragma now.
+           # Older perl installations should use 1.50
+
 use strict;
 
 require Exporter;
@@ -10,7 +12,7 @@ use vars qw($VERSION $API_VERSION);
 use LWP::UserAgent;
 use URI::Escape;
 
-$VERSION = '1.50';
+$VERSION = '1.51';
 $API_VERSION = join('/','Perl',$VERSION);
 
 # we have two servers main servers.
@@ -51,7 +53,7 @@ sub setServers {
 sub writeIpAddressToCache {
   my ($self, $filename, $ipstr) = @_;
   my $datetime = time();
-  open my $fh, ">$filename";
+  open my $fh, ">$filename" or return;
   print $fh $ipstr . "\n";
   print $fh $datetime . "\n";
 }
@@ -147,13 +149,22 @@ sub output {
   return $self->{output};
 }
 
+# if possible send the escaped string as latin1 for backward compatibility.
+# That makes a difference for chars 128..255
+# otherwise use utf8 encoding.
+#
+sub _mm_uri_escape {
+  return uri_escape($_[0]) if $] < 5.007;
+  return utf8::downgrade( my $t = $_[0], 1 ) ?   uri_escape($_[0]) :  uri_escape_utf8($_[0]) ;
+}
+
 sub querySingleServer {
   my ($self, $server) = @_;
   my $url = ($self->{isSecure} ? 'https' : 'http') . '://' . $server . '/' .
       $self->{url};
   my $check_field = $self->{check_field};
   my $queries = $self->{queries};
-  my $query_string = join('&', map { "$_=" . uri_escape($queries->{$_}) } keys %$queries);
+  my $query_string = join('&', map { "$_=" . _mm_uri_escape($queries->{$_}) } keys %$queries);
   $query_string .= "&clientAPI=$API_VERSION";
   if ($self->{"timeout"} > 0) {
     $self->{ua}->timeout($self->{"timeout"});
