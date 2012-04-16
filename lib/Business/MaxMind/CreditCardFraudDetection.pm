@@ -14,12 +14,12 @@ my @allowed_fields = qw/i domain city region postal country bin binName
 		shipAddr shipCity shipRegion shipPostal shipCountry txnID sessionID
 		usernameMD5 passwordMD5 user_agent accept_language /;
 
-$VERSION = '1.51';
+$VERSION = '1.52';
 
 sub _init {
   my $self = shift;
   $self->{url} = 'app/ccv2r';
-  $self->{check_field} = 'score';
+  $self->{check_field} = 'countryMatch';
   $self->{timeout} ||= 10; # provide a default value of 10 seconds for timeout if not set by user
   %{$self->{allowed_fields}} = map {$_ => 1} @allowed_fields
 }

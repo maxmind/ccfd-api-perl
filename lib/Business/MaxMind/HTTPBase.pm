@@ -12,7 +12,7 @@ use vars qw($VERSION $API_VERSION);
 use LWP::UserAgent;
 use URI::Escape;
 
-$VERSION = '1.51';
+$VERSION = '1.52';
 $API_VERSION = join('/','Perl',$VERSION);
 
 # we have two servers main servers.
