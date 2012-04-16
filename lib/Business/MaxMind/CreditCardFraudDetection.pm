@@ -7,9 +7,11 @@ use vars qw($VERSION);
 use LWP::UserAgent;
 use base 'Business::MaxMind::HTTPBase';
 
-my @allowed_fields = qw/i domain city region postal country bin license_key/;
+# input fields
+my @allowed_fields = qw/i domain city region postal country bin binName
+		binPhone custPhone license_key/;
 
-$VERSION = '1.1';
+$VERSION = '1.2';
 
 sub _init {
   my $self = shift;
@@ -43,6 +45,9 @@ This example queries the credit card fraud scoring service and displays the resu
                 postal => '10011',
                 country => 'US',
                 bin => '549099', # optional
+                binName => 'MBNA America Bank', # optional
+                binPhone => '800 421 2110', # optional
+                custPhone => '212-242', # Area Code + Local Exchange
                 license_key => 'LICENSE_KEY_HERE' # optional
               );
   $ccfs->query;
@@ -68,8 +73,11 @@ Sets input fields.  The input fields are
   <li><b>i:</b> Client IP Address (IP address of customer placing order)
   <li><b>domain:</b> E-mail domain (e.g. hotmail.com, aol.com)
   <li><b>city, region, postal, country:</b> Billing City/State/ZipCode/Country
-  <li><b>bin:</b> BIN number, first 6 digits of credit card that identifies the issuing bank (optional)
-  <li><b>license_key:</b> License Key, for registered users (optional)
+  <li><b>bin:</b> BIN number, first 6 digits of credit card that identifies the issuing bank, optional
+  <li><b>binName:</b> Name of the bank which issued the credit card based on BIN number, optional
+  <li><b>binPhone:</b> Customer service phone number listed on back of credit card, optional
+  <li><b>custPhone:</b> Area code and local exchange of customer's phone number, optional
+  <li><b>license_key:</b> License Key, for registered users, optional
 </ul>
 
 =end html

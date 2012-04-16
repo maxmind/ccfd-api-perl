@@ -1,5 +1,8 @@
 Revision history for Perl extension Business::Maxmind.
 
+1.2  July 2nd 2004
+	- Added binName, binPhone, custPhone to list of input fields
+
 1.1  June 14th 2004
 	- Replaced h1 and h2 servers with www and www2 (all ending with maxmind.com)
 	- Added debug and timeout options
@@ -7,4 +10,3 @@ Revision history for Perl extension Business::Maxmind.
 
 1.0  May 5st 2004
 	- original version
-

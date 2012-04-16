@@ -9,7 +9,7 @@ use vars qw($VERSION $API_VERSION);
 
 use LWP::UserAgent;
 
-$VERSION = '1.1';
+$VERSION = '1.2';
 $API_VERSION = join('/','Perl',$VERSION);
 
 # we have two servers here in case one goes down
