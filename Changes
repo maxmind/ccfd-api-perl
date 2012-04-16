@@ -1,4 +1,15 @@
 Revision history for Perl extension Business::Maxmind::CreditCardFraudDetection
+1.49 Februar 19th 2009
+	- add minfraud3.maxmind.com as primary server ( Boris Zentner )
+1.48 October 3th 2008
+	- add new optional fields user_agent and accept_language to Business::MaxMind::CreditCardFraudDetection ( Boris Zentner )
+
+1.47 Skipped
+
+1.46 October 4th 2007
+	- Fixed bug in setServers if new server list is smaller than the old server list
+	- getServers returns reference to an empty list instead of undef if no servers in list
+	- Replaced www.maxmind.com and www2.maxmind.com with minfraud1.maxmind.com and minfraud2.maxmind.com
 
 1.43 October 2nd 2006
 	- Added support for usernameMD5 and passwordMD5

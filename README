@@ -1,5 +1,5 @@
-Business::MaxMind::HTTPBase version 1.43
-========================================
+Business::MaxMind::HTTPBase version 1.46
+=======================================
 
 DOCUMENTATION
 
@@ -20,6 +20,7 @@ This module requires these other modules and libraries:
 
   LWP::UserAgent
   Net::SSLeay (for SSL, if isSecure is set to true)
+  Crypt::SSLeay (for SSL)
 
 For more details on the MaxMind Credit Card Fraud Detection service, see:
 http://www.maxmind.com/app/ccv_overview

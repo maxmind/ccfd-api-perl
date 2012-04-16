@@ -12,9 +12,9 @@ use base 'Business::MaxMind::HTTPBase';
 my @allowed_fields = qw/i domain city region postal country bin binName
 		binPhone custPhone license_key requested_type forwardedIP emailMD5
 		shipAddr shipCity shipRegion shipPostal shipCountry txnID sessionID
-		usernameMD5 passwordMD5/;
+		usernameMD5 passwordMD5 user_agent accept_language /;
 
-$VERSION = '1.43';
+$VERSION = '1.48';
 
 sub _init {
   my $self = shift;
@@ -47,32 +47,41 @@ __END__
 
 =head1 NAME
 
-Business::MaxMind::CreditCardFraudDetection - Access MaxMind credit card fraud detection services
+Business::MaxMind::CreditCardFraudDetection - Access MaxMind minFraud services
 
 =head1 ABSTRACT
 
-This module queries the MaxMind credit card fraud scoring service and returns the results.  The service
+This module queries the MaxMind minFraud service and returns the results.  The service
 uses a free e-mail database, an IP address geography database, a bank identification number, and proxy checks
 to return a risk factor score representing the likelihood that the credit card transaction is fraudulent.
 
 =head1 SYNOPSIS
 
-This example queries the credit card fraud scoring service and displays the results:
+This example queries the minFraud service and displays the results:
 
-  my $ccfs = Business::MaxMind::CreditCardFraudDetection->new(isSecure => 1, debug => 0, timeout => 10);
-  $ccfs->input( i => '24.24.24.24',
-                domain => 'yahoo.com',
-                city => 'New York',
-                region => 'NY',
-                postal => '10011',
-                country => 'US',
-                bin => '549099', # optional
-                binName => 'MBNA America Bank', # optional
-                binPhone => '800 421 2110', # optional
-                custPhone => '212-242', # Area Code + Local Exchange
-                license_key => 'LICENSE_KEY_HERE' # optional
-              );
+  my $ccfs =
+    Business::MaxMind::CreditCardFraudDetection->new(
+                                                      isSecure => 1,
+                                                      debug    => 0,
+                                                      timeout  => 10
+    );
+  $ccfs->input(
+         i               => '24.24.24.24',
+         city            => 'New York',
+         region          => 'NY',
+         postal          => '10011',
+         country         => 'US',
+         domain          => 'yahoo.com',            # optional
+         bin             => '549099',               # optional
+         binName         => 'MBNA America Bank',    # optional
+         binPhone        => '800 421 2110',         # optional
+         custPhone       => '212-242',              # optional Area Code + Local Exchange
+         user_agent      => 'Mozilla/4.0',          # optional
+         accept_language => 'en',                   # optional
+         license_key     => 'LICENSE_KEY_HERE'
+  );
   $ccfs->query;
+
   my $hash_ref = $ccfs->output;
 
 =head1 METHODS
@@ -100,6 +109,8 @@ Sets input fields.  The input fields are
   <li><b>binPhone:</b> Customer service phone number listed on back of credit card, optional
   <li><b>custPhone:</b> Area code and local exchange of customer's phone number, optional
   <li><b>license_key:</b> License Key, for registered users, optional
+  <li><b>user_agent:</b> User-Agent HTTP header, identifies the browser the end-user is using. optional
+  <li><b>accept_language:</b> Accept-Language HTTP header, identifies the language settings of the browser the end-user is using. optional
 </ul>
 
 =end html
@@ -129,7 +140,7 @@ TJ Mather, E<lt>tjmather@maxmind.comE<gt>
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright 2004 by MaxMind LLC
+Copyright 2007 by MaxMind LLC
 
 All rights reserved.  This package is free software and is licensed under
 the GPL.  For details, see the COPYING file.

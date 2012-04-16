@@ -10,12 +10,13 @@ use vars qw($VERSION $API_VERSION);
 use LWP::UserAgent;
 use URI::Escape;
 
-$VERSION = '1.43';
+$VERSION = '1.49';
 $API_VERSION = join('/','Perl',$VERSION);
 
-# we have two servers here in case one goes down
-# www should be used by default, www2 is the backup
-my @defaultservers = qw/www.maxmind.com www2.maxmind.com/;
+# we have two servers main servers.
+# if possible use minfraud3 it is the fastest followed by minfraud1
+# minfraud2 should only used if you have a good reason
+my @defaultservers = qw/minfraud1.maxmind.com minfraud3.maxmind.com minfraud2.maxmind.com/;
 
 sub new {
   my $i = 0;
@@ -39,27 +40,12 @@ sub new {
 }
 
 sub getServers {
-  my $self = shift;
-  my $serverarrayref;
-  my $i = 0;
-  my $s = $self->{servers};
-  for my $server (@$s) {
-    $serverarrayref->[$i] = $self->{servers}->[$i];
-    $i++;
-  }
-  return $serverarrayref;
+  return [ @{ $_[0]->{servers} || [] } ];
 }
 
 sub setServers {
-  my $self = shift;
-  my $serverarrayref = shift;
-  my $i = 0;
-  my $s = $self->{servers};
-  $s = $#$serverarrayref;
-  for my $server (@$serverarrayref) {
-    $self->{servers}->[$i] = $server;
-    $i++;
-  }
+  my ( $self, $serverarrayref ) = @_;
+  $self->{servers} = [@$serverarrayref];
 }
 
 sub writeIpAddressToCache {
@@ -253,7 +239,7 @@ TJ Mather, E<lt>tjmather@maxmind.comE<gt>
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright 2004 by MaxMind LLC
+Copyright 2008 by MaxMind LLC
 
 All rights reserved.  This package is free software and is licensed under
 the GPL.  For details, see the COPYING file.
