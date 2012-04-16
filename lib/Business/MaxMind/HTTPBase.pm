@@ -9,28 +9,56 @@ use vars qw($VERSION $API_VERSION);
 
 use LWP::UserAgent;
 
-$VERSION = '1.2';
+$VERSION = '1.3';
 $API_VERSION = join('/','Perl',$VERSION);
 
 # we have two servers here in case one goes down
 # www should be used by default, www2 is the backup
-my @servers = qw/www.maxmind.com www2.maxmind.com/;
+my @defaultservers = qw/www.maxmind.com www2.maxmind.com/;
 
 sub new {
+  my $i = 0;
   my ($class) = shift;
   if ($class eq 'Business::MaxMind::HTTPBase') {
     die "Business::MaxMind::HTTPBase is an abstract class - use a subclass instead";
   }
   my $self = { @_ };
   bless $self, $class;
+  for my $server (@defaultservers){
+    $self->{servers}->[$i] = $server;
+    $i++;
+  }
   $self->{ua} = LWP::UserAgent->new;
   $self->_init;
   return $self;
 }
+sub getServers {
+  my $self = shift;
+  my $serverarrayref;
+  my $i = 0;
+  my $s = $self->{servers};
+  for my $server (@$s) {
+    $serverarrayref->[$i] = $self->{servers}->[$i];
+    $i++;
+  }
+  return $serverarrayref;
+}
+sub setServers {
+  my $self = shift;
+  my $serverarrayref = shift;
+  my $i = 0;
+  my $s = $self->{servers};
+  $s = $#$serverarrayref;
+  for my $server (@$serverarrayref) {
+    $self->{servers}->[$i] = $server;
+    $i++;
+  }
+}
 
 sub query {
   my ($self) = @_;
-  for my $server (@servers) {
+  my $s = $self->{servers};
+  for my $server (@$s) {
     my $result = $self->querySingleServer($server);
     return $result if $result;
   }
@@ -43,8 +71,14 @@ sub input {
     unless (exists $self->{allowed_fields}->{$k}) {
       die "invalid input $k - perhaps misspelled field?";
     }
-    $self->{queries}->{$k} = $v;
+    $self->{queries}->{$k} = $self->filter_field($k, $v);
   }
+}
+
+# sub-class should override this if it needs to filter inputs
+sub filter_field {
+  my ($self, $name, $value) = @_;
+  return $value;
 }
 
 sub output {
@@ -56,6 +90,7 @@ sub querySingleServer {
   my ($self, $server) = @_;
   my $url = ($self->{isSecure} ? 'https' : 'http') . '://' . $server . '/' .
       $self->{url};
+  my $check_field = $self->{check_field};
   my $queries = $self->{queries};
   my $query_string = join('&', map { "$_=" . $queries->{$_} } keys %$queries);
   $query_string .= "&clientAPI=$API_VERSION";
@@ -75,7 +110,7 @@ sub querySingleServer {
       my ($key, $value) = split('=',$kvp,2);
       $output{$key} = $value;
     }
-    unless (exists $output{score}) {
+    unless (exists $output{$check_field}) {
       return 0;
     }
     $self->{output} = \%output;

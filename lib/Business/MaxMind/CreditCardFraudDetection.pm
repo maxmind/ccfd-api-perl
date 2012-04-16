@@ -4,20 +4,34 @@ use strict;
 
 use vars qw($VERSION);
 
+use Digest::MD5;
 use LWP::UserAgent;
 use base 'Business::MaxMind::HTTPBase';
 
 # input fields
 my @allowed_fields = qw/i domain city region postal country bin binName
-		binPhone custPhone license_key/;
+		binPhone custPhone license_key requested_type forwardedIP emailMD5
+		shipAddr txnID sessionID/;
 
-$VERSION = '1.2';
+$VERSION = '1.3';
 
 sub _init {
   my $self = shift;
   $self->{url} = 'app/ccv2r';
+  $self->{check_field} = 'score';
   $self->{timeout} ||= 10; # provide a default value of 10 seconds for timeout if not set by user
   %{$self->{allowed_fields}} = map {$_ => 1} @allowed_fields
+}
+
+sub filter_field {
+  my ($self, $name, $value) = @_;
+
+  if ($name eq 'emailMD5') {
+    if ($value =~ m!\@!) {
+      return Digest::MD5::md5_hex(lc($value));
+    }
+  }
+  return $value;
 }
 
 1;
@@ -82,6 +96,8 @@ Sets input fields.  The input fields are
 
 =end html
 
+See L<http://www.maxmind.com/app/ccv> for full list of input fields.
+
 Returns 1 on success, 0 on failure.
 
 =item query
@@ -101,7 +117,7 @@ Returns the error message from an input or query method call.
 
 =head1 SEE ALSO
 
-L<http://www.maxmind.com/app/ccv>
+L<http://www.maxmind.com/app/ccv_overview>
 
 =head1 AUTHOR
 
