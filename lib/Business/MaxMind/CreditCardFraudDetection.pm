@@ -14,7 +14,7 @@ my @allowed_fields = qw/i domain city region postal country bin binName
 		shipAddr shipCity shipRegion shipPostal shipCountry txnID sessionID
 		usernameMD5 passwordMD5 user_agent accept_language /;
 
-$VERSION = '1.48';
+$VERSION = '1.50';
 
 sub _init {
   my $self = shift;

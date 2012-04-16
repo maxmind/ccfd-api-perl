@@ -60,7 +60,8 @@ $ccfs->input(
   shipPostal  => '11434',
   shipCountry => 'US',
   txnID       => '1234',
-  sessionID   => 'abcd9876' accept_language => 'de-de',
+  sessionID   => 'abcd9876',
+  accept_language => 'de-de',
   user_agent =>
 'Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1; .NET CLR 1.0.3705; Media Center PC 3.1; .NET CLR 1.1.4322)',
 );
