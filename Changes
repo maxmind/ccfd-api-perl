@@ -1,5 +1,23 @@
 Revision history for Perl extension Business::Maxmind::CreditCardFraudDetection
 
+1.43 October 2nd 2006
+	- Added support for usernameMD5 and passwordMD5
+
+1.42 October 13th 2005
+	- Escape input parameters, fixed bug where + sign for telephone verification
+		was not passed
+
+1.41 August 7th 2005
+	- In case DNS goes down, reset timestamp on IP address cache file,
+		prevents querying www.maxmind.com over and over
+
+1.4  August 1st 2005
+	- Added support for Telephone Verification
+	- Use POST method instead of GET method, fixes bug where query string
+		was truncated
+	- Added support for bypassing DNS using IP addresses
+	- Added shipCity shipRegion shipPostal shipCountry to list of input fields
+
 1.3  February 9th 2005
 	- Added requested_type, forwardedIP, emailMD5, shipAddr,
 		txnID, sessionID to list of input fields

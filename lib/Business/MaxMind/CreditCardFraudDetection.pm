@@ -11,9 +11,10 @@ use base 'Business::MaxMind::HTTPBase';
 # input fields
 my @allowed_fields = qw/i domain city region postal country bin binName
 		binPhone custPhone license_key requested_type forwardedIP emailMD5
-		shipAddr txnID sessionID/;
+		shipAddr shipCity shipRegion shipPostal shipCountry txnID sessionID
+		usernameMD5 passwordMD5/;
 
-$VERSION = '1.3';
+$VERSION = '1.43';
 
 sub _init {
   my $self = shift;
@@ -31,6 +32,13 @@ sub filter_field {
       return Digest::MD5::md5_hex(lc($value));
     }
   }
+
+  if ($name =~ m!(username|password)MD5$!) {
+    if (length($value) != 32) {
+      return Digest::MD5::md5_hex(lc($value));
+    }
+  }
+
   return $value;
 }
 
@@ -39,7 +47,7 @@ __END__
 
 =head1 NAME
 
-Business::MaxMind::CreditCardFraudDetection - Access free and paid MaxMind credit card fraud detection services
+Business::MaxMind::CreditCardFraudDetection - Access MaxMind credit card fraud detection services
 
 =head1 ABSTRACT
 
@@ -108,10 +116,6 @@ server fails to respond, it sends out a request to the secondary server.
 =item output
 
 Returns the output returned by the MaxMind server as a hash reference.
-
-=item error_msg
-
-Returns the error message from an input or query method call.
 
 =back
 

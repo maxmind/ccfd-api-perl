@@ -8,8 +8,9 @@ use AutoLoader qw(AUTOLOAD);
 use vars qw($VERSION $API_VERSION);
 
 use LWP::UserAgent;
+use URI::Escape;
 
-$VERSION = '1.3';
+$VERSION = '1.43';
 $API_VERSION = join('/','Perl',$VERSION);
 
 # we have two servers here in case one goes down
@@ -28,10 +29,15 @@ sub new {
     $self->{servers}->[$i] = $server;
     $i++;
   }
+  unless ($self->{wsIpaddrRefreshTimeout}) {
+    $self->{wsIpaddrRefreshTimeout} = 18000;  # default of 5 hours timeout
+  }
+  $self->{wsIpaddrCacheFile} ||= '/tmp/maxmind.ws.cache';
   $self->{ua} = LWP::UserAgent->new;
   $self->_init;
   return $self;
 }
+
 sub getServers {
   my $self = shift;
   my $serverarrayref;
@@ -43,6 +49,7 @@ sub getServers {
   }
   return $serverarrayref;
 }
+
 sub setServers {
   my $self = shift;
   my $serverarrayref = shift;
@@ -55,13 +62,81 @@ sub setServers {
   }
 }
 
+sub writeIpAddressToCache {
+  my ($self, $filename, $ipstr) = @_;
+  my $datetime = time();
+  open my $fh, ">$filename";
+  print $fh $ipstr . "\n";
+  print $fh $datetime . "\n";
+}
+
+sub readIpAddressFromCache {
+  my ($self) = @_;
+  my $ipstr;
+  my $datetime;
+  if (-s $self->{wsIpaddrCacheFile} ) {
+    open my $fh, $self->{wsIpaddrCacheFile};
+    $ipstr = <$fh>;
+    chomp($ipstr);
+    $datetime = <$fh>;
+    chomp($datetime);
+  }
+
+  unless ($ipstr && (time() - $datetime <= $self->{wsIpaddrRefreshTimeout})) {
+    # refresh cached IP addresses if no IP address in file, or if refresh timeout expired
+    if (my $tryIpstr = $self->readIpAddressFromWeb($ipstr)) {
+      $ipstr = $tryIpstr;
+    } else {
+      if ($self->{debug}) {
+	print STDERR "Warning, unable to get ws_ipaddr from www.maxmind.com\n";
+      }
+    }
+    # we write to cache whether or not we were able to get $tryIpStr, since
+    # in case DNS goes down, we don't want to check app/ws_ipaddr over and over
+    $self->writeIpAddressToCache($self->{wsIpaddrCacheFile}, $ipstr);
+  }
+  return $ipstr;
+}
+
+sub readIpAddressFromWeb {
+  my ($self) = @_;
+  my $request = HTTP::Request->new('GET', "http://www.maxmind.com/app/ws_ipaddr");
+  if ($self->{"timeout"} > 0) {
+    $self->{ua}->timeout($self->{"timeout"});  
+  }
+
+  my $response = $self->{ua}->request($request);
+  if ($response->is_success) {
+    my $content = $response->content;
+    chomp($content);
+    if ($content =~ m!^(?:\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3};)*\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$!) {
+      # is comma separated string of IP addresses
+      return $content;
+    }
+  }
+}
+
 sub query {
   my ($self) = @_;
   my $s = $self->{servers};
+  my $ipstr;
+  my $datetime;
+
+  unless ($self->{useDNS}) {
+    $ipstr = $self->readIpAddressFromCache;
+  }
+  if ($ipstr) {
+    my @ipaddr = split(";",$ipstr);
+    for my $ip (@ipaddr) {
+      my $result = $self->querySingleServer($ip);
+      return $result if $result;
+    }
+  }
   for my $server (@$s) {
     my $result = $self->querySingleServer($server);
     return $result if $result;
   }
+  return 0;
 }
 
 sub input {
@@ -92,14 +167,16 @@ sub querySingleServer {
       $self->{url};
   my $check_field = $self->{check_field};
   my $queries = $self->{queries};
-  my $query_string = join('&', map { "$_=" . $queries->{$_} } keys %$queries);
+  my $query_string = join('&', map { "$_=" . uri_escape($queries->{$_}) } keys %$queries);
   $query_string .= "&clientAPI=$API_VERSION";
-  if ($self->{"timeout"} > 0){
+  if ($self->{"timeout"} > 0) {
     $self->{ua}->timeout($self->{"timeout"});
-  }  
-  my $request = HTTP::Request->new('GET', join('?', $url, $query_string));
+  }
+  my $request = HTTP::Request->new('POST', $url);
+  $request->content_type('application/x-www-form-urlencoded');
+  $request->content($query_string);
   if ($self->{debug}) {
-    print STDERR "sending HTTP::Request: " . $request->as_string . " with query_string=" . $query_string;
+    print STDERR "sending HTTP::Request: " . $request->as_string;
   }
   my $response = $self->{ua}->request($request);
   if ($response->is_success) {
@@ -128,13 +205,14 @@ __END__
 
 =head1 NAME
 
-Business::MaxMind::HTTPBase - Base class for accessing free and paid MaxMind HTTP web services
+Business::MaxMind::HTTPBase - Base class for accessing HTTP web services
 
 =head1 ABSTRACT
 
-This is an abstract base class for accessing free and paid MaxMind web services.
-Currently there is one subclass, for the Credit Card Fraud Scorer.
-There may be another subclass for the Location Verifier in the future.
+This is an abstract base class for accessing MaxMind web services.
+Currently there are three subclasses, for Credit Card Fraud Detection,
+Telephone Verification and Location Verification.  This class can be
+used for other HTTP based web services as well.
 
 =head1 METHODS
 
@@ -155,14 +233,11 @@ Returns 1 on success, 0 on failure.
 
 Sends out query to MaxMind server and waits for response.  If the primary
 server fails to respond, it sends out a request to the secondary server.
+Returns 1 on success, 0 on failure.
 
 =item output
 
 Returns the output returned by the MaxMind server as a hash reference.
-
-=item error_msg
-
-Returns the error message from an input or query method call.
 
 =back
 

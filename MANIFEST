@@ -6,3 +6,4 @@ lib/Business/MaxMind/HTTPBase.pm
 README
 t/1.t
 META.yml                                 Module meta-data (added by MakeMaker)
+example.pl
