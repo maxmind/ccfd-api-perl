@@ -5,20 +5,16 @@ use 5.006; # we use the utf8 pragma now.
 
 use strict;
 
-require Exporter;
-use AutoLoader qw(AUTOLOAD);
 use vars qw($VERSION $API_VERSION);
 
 use LWP::UserAgent;
 use URI::Escape;
 
-$VERSION = '1.52';
+$VERSION = '1.53';
 $API_VERSION = join('/','Perl',$VERSION);
 
-# we have two servers main servers.
-# if possible use minfraud3 it is the fastest followed by minfraud1
-# minfraud2 should only used if you have a good reason
-my @defaultservers = qw/minfraud3.maxmind.com minfraud1.maxmind.com minfraud2.maxmind.com/;
+# default minfraud servers
+my @defaultservers = ( 'api-us-east.maxmind.com', 'api-us-west.maxmind.com' );
 
 sub new {
   my $i = 0;
@@ -36,7 +32,7 @@ sub new {
     $self->{wsIpaddrRefreshTimeout} = 18000;  # default of 5 hours timeout
   }
   $self->{wsIpaddrCacheFile} ||= '/tmp/maxmind.ws.cache';
-  $self->{ua} = LWP::UserAgent->new;
+  $self->{ua} = LWP::UserAgent->new( ssl_opts => { verify_hostname => 0 } );
   $self->_init;
   return $self;
 }
