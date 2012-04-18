@@ -14,7 +14,8 @@ $VERSION = '1.53';
 $API_VERSION = join('/','Perl',$VERSION);
 
 # default minfraud servers
-my @defaultservers = ( 'api-us-east.maxmind.com', 'api-us-west.maxmind.com' );
+my @defaultservers = ( 'minfraud.maxmind.com', 'minfraud-us-east.maxmind.com',
+'minfraud-us-west.maxmind.com' );
 
 sub new {
   my $i = 0;
