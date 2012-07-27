@@ -9,12 +9,13 @@ use LWP::UserAgent;
 use base 'Business::MaxMind::HTTPBase';
 
 # input fields
-my @allowed_fields = qw/i domain city region postal country bin binName
-		binPhone custPhone license_key requested_type forwardedIP emailMD5
-		shipAddr shipCity shipRegion shipPostal shipCountry txnID sessionID
-		usernameMD5 passwordMD5 user_agent accept_language /;
+my @allowed_fields = qw/i city region postal country domain bin binName binPhone
+		 custPhone emailMD5 usernameMD5 passwordMD5 shipAddr shipCity
+		 shipRegion shipPostal shipCountry txnID sessionID user_agent
+		 accept_language order_amount order_currency shopID avs_result
+		 cvv_result txn_type license_key requested_type forwardedIP/;
 
-$VERSION = '1.53';
+$VERSION = '1.53.1';
 
 sub _init {
   my $self = shift;
