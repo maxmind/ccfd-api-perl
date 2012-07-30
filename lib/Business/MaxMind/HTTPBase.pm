@@ -10,7 +10,7 @@ use vars qw($VERSION $API_VERSION);
 use LWP::UserAgent;
 use URI::Escape;
 
-$VERSION = '1.53';
+$VERSION = '1.54';
 $API_VERSION = join('/','Perl',$VERSION);
 
 # default minfraud servers
