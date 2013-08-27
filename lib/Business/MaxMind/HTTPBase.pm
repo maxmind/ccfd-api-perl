@@ -47,60 +47,6 @@ sub setServers {
   $self->{servers} = [@$serverarrayref];
 }
 
-sub writeIpAddressToCache {
-  my ($self, $filename, $ipstr) = @_;
-  my $datetime = time();
-  open my $fh, ">$filename" or return;
-  print $fh $ipstr . "\n";
-  print $fh $datetime . "\n";
-}
-
-sub readIpAddressFromCache {
-  my ($self) = @_;
-  my $ipstr;
-  my $datetime;
-  if (-s $self->{wsIpaddrCacheFile} ) {
-    open my $fh, $self->{wsIpaddrCacheFile};
-    $ipstr = <$fh>;
-    chomp($ipstr);
-    $datetime = <$fh>;
-    chomp($datetime);
-  }
-
-  unless ($ipstr && (time() - $datetime <= $self->{wsIpaddrRefreshTimeout})) {
-    # refresh cached IP addresses if no IP address in file, or if refresh timeout expired
-    if (my $tryIpstr = $self->readIpAddressFromWeb($ipstr)) {
-      $ipstr = $tryIpstr;
-    } else {
-      if ($self->{debug}) {
-	print STDERR "Warning, unable to get ws_ipaddr from www.maxmind.com\n";
-      }
-    }
-    # we write to cache whether or not we were able to get $tryIpStr, since
-    # in case DNS goes down, we don't want to check app/ws_ipaddr over and over
-    $self->writeIpAddressToCache($self->{wsIpaddrCacheFile}, $ipstr);
-  }
-  return $ipstr;
-}
-
-sub readIpAddressFromWeb {
-  my ($self) = @_;
-  my $request = HTTP::Request->new('GET', "http://www.maxmind.com/app/ws_ipaddr");
-  if ($self->{"timeout"} > 0) {
-    $self->{ua}->timeout($self->{"timeout"});  
-  }
-
-  my $response = $self->{ua}->request($request);
-  if ($response->is_success) {
-    my $content = $response->content;
-    chomp($content);
-    if ($content =~ m!^(?:\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3};)*\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$!) {
-      # is comma separated string of IP addresses
-      return $content;
-    }
-  }
-}
-
 sub query {
   my ($self) = @_;
   my $s = $self->{servers};
