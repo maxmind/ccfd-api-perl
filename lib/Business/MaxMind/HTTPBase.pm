@@ -29,10 +29,6 @@ sub new {
     $self->{servers}->[$i] = $server;
     $i++;
   }
-  unless ($self->{wsIpaddrRefreshTimeout}) {
-    $self->{wsIpaddrRefreshTimeout} = 18000;  # default of 5 hours timeout
-  }
-  $self->{wsIpaddrCacheFile} ||= '/tmp/maxmind.ws.cache';
   $self->{ua} = LWP::UserAgent->new( ssl_opts => { verify_hostname => 0 } );
   $self->_init;
   return $self;
