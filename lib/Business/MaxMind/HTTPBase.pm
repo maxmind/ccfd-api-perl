@@ -50,19 +50,8 @@ sub setServers {
 sub query {
   my ($self) = @_;
   my $s = $self->{servers};
-  my $ipstr;
   my $datetime;
 
-  unless ($self->{useDNS}) {
-    $ipstr = $self->readIpAddressFromCache;
-  }
-  if ($ipstr) {
-    my @ipaddr = split(";",$ipstr);
-    for my $ip (@ipaddr) {
-      my $result = $self->querySingleServer($ip);
-      return $result if $result;
-    }
-  }
   for my $server (@$s) {
     my $result = $self->querySingleServer($server);
     return $result if $result;
