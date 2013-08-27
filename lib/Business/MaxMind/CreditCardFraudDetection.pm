@@ -15,7 +15,7 @@ my @allowed_fields = qw/i city region postal country domain bin binName binPhone
 		 accept_language order_amount order_currency shopID avs_result
 		 cvv_result txn_type license_key requested_type forwardedIP/;
 
-$VERSION = '1.54';
+$VERSION = '1.55';
 
 sub _init {
   my $self = shift;

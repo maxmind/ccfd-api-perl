@@ -1,4 +1,6 @@
 Revision history for Perl extension Business::Maxmind::CreditCardFraudDetection
+1.55 Aug 27th 2013
+        - Remove custom DNS cache. ( Boris Zentner )
 1.54 Jul 30th 2012
 	-  Added more input fields: avs_result, cvv_result,
 	   order_amount, order_currency, shopID, txn_type ( Gregory Oschwald )
