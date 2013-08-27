@@ -21,9 +21,6 @@ my $ccfs =
                                    isSecure               => 1,
                                    debug                  => 1,
                                    timeout                => 5,
-                                   wsIpaddrRefreshTimeout => 3600 * 5,
-                                   wsIpaddrCacheFile => "/tmp/maxmind.ws.cache",
-                                   useDNS            => 0
   );
 
 # see http://www.maxmind.com/app/ccv for description of fields
