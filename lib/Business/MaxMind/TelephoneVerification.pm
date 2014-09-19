@@ -2,31 +2,34 @@ package Business::MaxMind::TelephoneVerification;
 
 use strict;
 
-use vars qw($VERSION);
-$VERSION = '1.0';
-
 use LWP::UserAgent;
 use base 'Business::MaxMind::HTTPBase';
+
+our $VERSION = '1.55';
 
 my @allowed_fields = qw/l phone verify_code language/;
 
 sub _init {
-  my $self = shift;
-  $self->{url} = 'app/telephone_http';
-  $self->{check_field} = 'refid';
-  $self->{timeout} ||= 30; # provide a default value of 10 seconds for timeout if not set by user
-  %{$self->{allowed_fields}} = map {$_ => 1} @allowed_fields
+    my $self = shift;
+    $self->{url}         = 'app/telephone_http';
+    $self->{check_field} = 'refid';
+    $self->{timeout} ||= 30
+        ; # provide a default value of 10 seconds for timeout if not set by user
+    %{ $self->{allowed_fields} } = map { $_ => 1 } @allowed_fields;
 }
 
 1;
 __END__
-=head1 NAME
 
-Business::MaxMind::TelephoneVerification - Access MaxMind's Telephone Verification service
+# ABSTRACT: Access MaxMind's Telephone Verification services
 
-=head1 ABSTRACT
+=pod
+
+=head1 DESCRIPTION
 
 This module queries the Telephone Verification service and calls the customer
+
+=over
 
 =item new
 
@@ -74,17 +77,6 @@ The output fields are
 
 =head1 SEE ALSO
 
-L<http://www.maxmind.com/app/telephone_overview>
-
-=head1 AUTHOR
-
-Frank Mather, E<lt>frank@maxmind.comE<gt>
-
-=head1 COPYRIGHT AND LICENSE
-
-Copyright 2005 by MaxMind LLC
-
-All rights reserved.  This package is free software and is licensed under
-the GPL.  For details, see the COPYING file.
+L<https://www.maxmind.com/en/telephone_overview>
 
 =cut
