@@ -7,19 +7,22 @@
 
 use Test;
 use strict;
-BEGIN { plan tests => 1 };
+BEGIN { plan tests => 1 }
 use Business::MaxMind::CreditCardFraudDetection;
-ok(1); # If we made it this far, we're ok.
-my $ccfs = Business::MaxMind::CreditCardFraudDetection->new(isSecure => 1,
-debug => 1);
-$ccfs->input( i => '24.24.24.24',
-                domain => 'yahoo.com',
-                city => 'NewYork',
-                region => 'NY',
-                postal => '10011',
-                country => 'US',
-                bin => '549099',
-              );
+ok(1);    # If we made it this far, we're ok.
+my $ccfs = Business::MaxMind::CreditCardFraudDetection->new(
+    isSecure => 1,
+    debug    => 1
+);
+$ccfs->input(
+    i       => '24.24.24.24',
+    domain  => 'yahoo.com',
+    city    => 'NewYork',
+    region  => 'NY',
+    postal  => '10011',
+    country => 'US',
+    bin     => '549099',
+);
 $ccfs->query;
 my $hash_ref = $ccfs->output;
 

@@ -2,55 +2,55 @@ package Business::MaxMind::CreditCardFraudDetection;
 
 use strict;
 
-use vars qw($VERSION);
-
 use Digest::MD5;
 use LWP::UserAgent;
 use base 'Business::MaxMind::HTTPBase';
 
-# input fields
-my @allowed_fields = qw/i city region postal country domain bin binName binPhone
-		 custPhone emailMD5 usernameMD5 passwordMD5 shipAddr shipCity
-		 shipRegion shipPostal shipCountry txnID sessionID user_agent
-		 accept_language order_amount order_currency shopID avs_result
-		 cvv_result txn_type license_key requested_type forwardedIP/;
+our $VERSION = '1.55';
 
-$VERSION = '1.55';
+# input fields
+my @allowed_fields
+    = qw/i city region postal country domain bin binName binPhone
+    custPhone emailMD5 usernameMD5 passwordMD5 shipAddr shipCity
+    shipRegion shipPostal shipCountry txnID sessionID user_agent
+    accept_language order_amount order_currency shopID avs_result
+    cvv_result txn_type license_key requested_type forwardedIP/;
 
 sub _init {
-  my $self = shift;
-  $self->{url} = 'app/ccv2r';
-  $self->{check_field} = 'countryMatch';
-  $self->{timeout} ||= 10; # provide a default value of 10 seconds for timeout if not set by user
-  %{$self->{allowed_fields}} = map {$_ => 1} @allowed_fields
+    my $self = shift;
+    $self->{url}         = 'app/ccv2r';
+    $self->{check_field} = 'countryMatch';
+    $self->{timeout} ||= 10
+        ; # provide a default value of 10 seconds for timeout if not set by user
+    %{ $self->{allowed_fields} } = map { $_ => 1 } @allowed_fields;
 }
 
 sub filter_field {
-  my ($self, $name, $value) = @_;
+    my ( $self, $name, $value ) = @_;
 
-  if ($name eq 'emailMD5') {
-    if ($value =~ m!\@!) {
-      return Digest::MD5::md5_hex(lc($value));
+    if ( $name eq 'emailMD5' ) {
+        if ( $value =~ m!\@! ) {
+            return Digest::MD5::md5_hex( lc($value) );
+        }
     }
-  }
 
-  if ($name =~ m!(username|password)MD5$!) {
-    if (length($value) != 32) {
-      return Digest::MD5::md5_hex(lc($value));
+    if ( $name =~ m!(username|password)MD5$! ) {
+        if ( length($value) != 32 ) {
+            return Digest::MD5::md5_hex( lc($value) );
+        }
     }
-  }
 
-  return $value;
+    return $value;
 }
 
 1;
 __END__
 
-=head1 NAME
+# ABSTRACT: Access MaxMind minFraud services
 
-Business::MaxMind::CreditCardFraudDetection - Access MaxMind minFraud services
+=pod
 
-=head1 ABSTRACT
+=head1 DESCRIPTION
 
 This module queries the MaxMind minFraud service and returns the results.  The service
 uses a free e-mail database, an IP address geography database, a bank identification number, and proxy checks
@@ -58,15 +58,15 @@ to return a risk factor score representing the likelihood that the credit card t
 
 =head1 SYNOPSIS
 
-This example queries the minFraud service and displays the results:
+  use Business::MaxMind::CreditCardFraudDetection;
 
-  my $ccfs =
+  my $minfraud =
     Business::MaxMind::CreditCardFraudDetection->new(
                                                       isSecure => 1,
                                                       debug    => 0,
-                                                      timeout  => 10
-    );
-  $ccfs->input(
+                                                      timeout  => 10,
+  );
+  $minfraud->input(
          i               => '24.24.24.24',
          city            => 'New York',
          region          => 'NY',
@@ -81,9 +81,9 @@ This example queries the minFraud service and displays the results:
          accept_language => 'en',                   # optional
          license_key     => 'LICENSE_KEY_HERE'
   );
-  $ccfs->query;
+  $minfraud->query;
 
-  my $hash_ref = $ccfs->output;
+  my $hash_ref = $minfraud->output;
 
 =head1 METHODS
 
@@ -133,17 +133,6 @@ Returns the output returned by the MaxMind server as a hash reference.
 
 =head1 SEE ALSO
 
-L<http://www.maxmind.com/app/ccv_overview>
-
-=head1 AUTHOR
-
-TJ Mather, E<lt>tjmather@maxmind.comE<gt>
-
-=head1 COPYRIGHT AND LICENSE
-
-Copyright 2007 by MaxMind LLC
-
-All rights reserved.  This package is free software and is licensed under
-the GPL.  For details, see the COPYING file.
+L<https://www.maxmind.com/en/minfraud-services>
 
 =cut

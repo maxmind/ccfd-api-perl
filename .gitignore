@@ -1,0 +1,14 @@
+.\#*
+.build
+.tidyall.d
+Build
+Business-MaxMind-*
+MANIFEST
+META.yml
+Makefile
+Makefile.old
+\#*\#
+_build
+blib*
+cover_db*
+pm_to_blib*
