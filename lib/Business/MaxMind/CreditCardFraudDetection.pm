@@ -116,7 +116,7 @@ Sets input fields.  The input fields are
 
 =end html
 
-See L<http://www.maxmind.com/app/ccv> for full list of input fields.
+See L<http://dev.maxmind.com/minfraud/> for full list of input fields.
 
 Returns 1 on success, 0 on failure.
 
