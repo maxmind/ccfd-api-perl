@@ -5,7 +5,7 @@ use strict;
 use LWP::UserAgent;
 use base 'Business::MaxMind::HTTPBase';
 
-our $VERSION = '1.56';
+our $VERSION = '1.57';
 
 my @allowed_fields = qw/l phone verify_code language/;
 
