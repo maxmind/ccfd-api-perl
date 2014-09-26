@@ -10,7 +10,7 @@ use ExtUtils::MakeMaker ;
 
 
 my %WriteMakefileArgs = (
-  "ABSTRACT" => "Base class for accessing HTTP web services",
+  "ABSTRACT" => "API for MaxMind minFraud Services",
   "AUTHOR" => "TJ Mather <tjmather\@maxmind.com>, Frank Mather <frank\@maxmind.com>",
   "CONFIGURE_REQUIRES" => {
     "ExtUtils::MakeMaker" => 0
@@ -32,7 +32,7 @@ my %WriteMakefileArgs = (
     "Test::More" => 0,
     "utf8" => 0
   },
-  "VERSION" => "1.55",
+  "VERSION" => "1.56",
   "test" => {
     "TESTS" => "t/*.t"
   }
