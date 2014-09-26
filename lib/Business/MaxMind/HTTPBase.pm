@@ -7,7 +7,7 @@ use strict;
 use LWP::UserAgent;
 use URI::Escape;
 
-our $VERSION = '1.55';
+our $VERSION = '1.56';
 
 my $API_VERSION = join( '/', 'Perl', $VERSION );
 

@@ -6,7 +6,7 @@ use Digest::MD5;
 use LWP::UserAgent;
 use base 'Business::MaxMind::HTTPBase';
 
-our $VERSION = '1.55';
+our $VERSION = '1.56';
 
 # input fields
 my @allowed_fields
@@ -44,9 +44,10 @@ sub filter_field {
 }
 
 1;
-__END__
 
 # ABSTRACT: Access MaxMind minFraud services
+
+__END__
 
 =pod
 
