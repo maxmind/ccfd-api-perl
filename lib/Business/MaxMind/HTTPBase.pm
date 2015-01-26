@@ -4,6 +4,7 @@ use 5.006;
 
 use strict;
 
+use LWP::Protocol::https;
 use LWP::UserAgent;
 use URI::Escape;
 

@@ -1,6 +1,8 @@
 {{$NEXT}}
 
-- Make minFraud API client https by default
+- Make minFraud API client https by default. This distribution now
+  depends on LWP::Protocol::https to ensure that you have the modules
+  needed for SSL support installed.
 
 
 1.56     2014-09-26
