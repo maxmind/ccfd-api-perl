@@ -26,7 +26,7 @@ sub new {
     }
     my $self = {@_};
     bless $self, $class;
-    $self->{isSecure} = 1 if !exists $self->{isSecure};
+    $self->{isSecure} = 1 unless exists $self->{isSecure};
     for my $server (@defaultservers) {
         $self->{servers}->[$i] = $server;
         $i++;
