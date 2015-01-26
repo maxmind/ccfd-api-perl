@@ -5,9 +5,9 @@
 
 # change 'tests => 1' to 'tests => last_test_to_print';
 
-use Test;
+use Test::More;
 use strict;
-BEGIN { plan tests => 1 }
+BEGIN { plan tests => 3 }
 use Business::MaxMind::CreditCardFraudDetection;
 ok(1);    # If we made it this far, we're ok.
 my $ccfs = Business::MaxMind::CreditCardFraudDetection->new(
@@ -30,6 +30,15 @@ use Data::Dumper;
 print Dumper($hash_ref);
 
 #########################
+
+{
+    my $ccfs = Business::MaxMind::CreditCardFraudDetection->new();
+    ok($ccfs->{isSecure}, 'https by default');
+}
+{
+    my $ccfs = Business::MaxMind::CreditCardFraudDetection->new(isSecure => 0);
+    ok(!$ccfs->{isSecure}, 'http when asked for');
+}
 
 # Insert your test code below, the Test::More module is use()ed here so read
 # its man page ( perldoc Test::More ) for help writing this test script.

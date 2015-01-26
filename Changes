@@ -1,5 +1,8 @@
 {{$NEXT}}
 
+- Make minFraud API client https by default
+
+
 1.56     2014-09-26
 
 - Re-release to fix permission issues.
