@@ -4,6 +4,7 @@ use 5.006;
 
 use strict;
 
+use LWP::Protocol::https;
 use LWP::UserAgent;
 use URI::Escape;
 
@@ -26,6 +27,7 @@ sub new {
     }
     my $self = {@_};
     bless $self, $class;
+    $self->{isSecure} = 1 unless exists $self->{isSecure};
     for my $server (@defaultservers) {
         $self->{servers}->[$i] = $server;
         $i++;
