@@ -15,13 +15,6 @@ This module queries the MaxMind minFraud service and returns the results.
 - TJ Mather <tjmather@maxmind.com>
 - Frank Mather <frank@maxmind.com>
 
-# CONTRIBUTORS
-
-- Boris Zentner <bzentner@maxmind.com>
-- Greg Oschwald <goschwald@maxmind.com>
-- Mateu X Hunter <mhunter@maxmind.com>
-- Olaf Alders <oalders@maxmind.com>
-
 # COPYRIGHT AND LICENSE
 
 This software is Copyright (c) 2015 by MaxMind, Inc..
