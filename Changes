@@ -1,5 +1,9 @@
 {{$NEXT}}
 
+- Support for the Telephone Verification Service was removed as this service
+  is no longer offered.
+
+
 1.57     2015-01-30
 
 - Make minFraud API client https by default. This distribution now
