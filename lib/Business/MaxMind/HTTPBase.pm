@@ -146,9 +146,6 @@ __END__
 =head1 DESCRIPTION
 
 This is an abstract base class for accessing MaxMind web services.
-Currently there are three subclasses, for Credit Card Fraud Detection,
-Telephone Verification and Location Verification.  This class can be
-used for other HTTP based web services as well.
 
 =head1 METHODS
 
