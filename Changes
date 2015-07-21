@@ -1,5 +1,7 @@
 {{$NEXT}}
 
+1.60     2015-07-21
+
 - Support for the Telephone Verification Service was removed as this service
   is no longer offered.
 
