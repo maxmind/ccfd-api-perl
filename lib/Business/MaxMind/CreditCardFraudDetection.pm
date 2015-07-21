@@ -6,7 +6,7 @@ use Digest::MD5;
 use LWP::UserAgent;
 use base 'Business::MaxMind::HTTPBase';
 
-our $VERSION = '1.57';
+our $VERSION = '1.60';
 
 # input fields
 my @allowed_fields
