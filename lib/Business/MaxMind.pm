@@ -2,7 +2,7 @@ package Business::MaxMind;
 
 use 5.006;
 
-our $VERSION = '1.60';
+our $VERSION = '1.61';
 
 1;
 

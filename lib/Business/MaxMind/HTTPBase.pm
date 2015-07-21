@@ -8,7 +8,7 @@ use LWP::Protocol::https;
 use LWP::UserAgent;
 use URI::Escape;
 
-our $VERSION = '1.60';
+our $VERSION = '1.61';
 
 my $API_VERSION = join( '/', 'Perl', $VERSION );
 
