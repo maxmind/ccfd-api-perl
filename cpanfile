@@ -1,5 +1,5 @@
 requires "Digest::MD5" => "0";
-requires "LWP::Protocol::https" => "0";
+requires "LWP::Protocol::https" => "6.06";
 requires "LWP::UserAgent" => "0";
 requires "URI::Escape" => "0";
 requires "base" => "0";

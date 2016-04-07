@@ -1,5 +1,8 @@
 {{$NEXT}}
 
+- LWP::Protocol::https should not be used directly.  It has now been moved to
+  Makefile.PL to ensure that it is installed and available.
+
 1.60     2015-07-21
 
 - Support for the Telephone Verification Service was removed as this service
