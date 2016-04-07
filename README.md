@@ -4,7 +4,7 @@ Business::MaxMind - API for MaxMind minFraud Services
 
 # VERSION
 
-version 1.60
+version 1.61
 
 # DESCRIPTION
 
@@ -24,7 +24,7 @@ This module queries the MaxMind minFraud service and returns the results.
 
 # COPYRIGHT AND LICENSE
 
-This software is Copyright (c) 2015 by MaxMind, Inc..
+This software is Copyright (c) 2016 by MaxMind, Inc.
 
 This is free software, licensed under:
 
