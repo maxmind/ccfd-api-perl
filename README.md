@@ -2,6 +2,11 @@
 
 Business::MaxMind - API for MaxMind minFraud Services
 
+# DEPRECATION
+
+This library is deprecated. Please use our [minFraud Score, Insights, and
+Factors API](https://github.com/maxmind/minfraud-api-perl).
+
 # VERSION
 
 version 1.61
